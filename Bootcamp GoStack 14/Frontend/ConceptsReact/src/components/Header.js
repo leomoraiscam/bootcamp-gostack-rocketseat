@@ -4,7 +4,6 @@ function Header({title, children}) {
   return (
     <header>
       {title}
-      {children}
     </header>
   )
 }
