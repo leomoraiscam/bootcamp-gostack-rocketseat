@@ -1,36 +1,68 @@
-import React from 'react';
+import React, { useState, FormEvent } from 'react';
 import { FiChevronRight } from 'react-icons/fi';
+import api from '../../services/api';
 import logoImg from '../../assets/logo.svg';
 import { Title, Form, Repositories } from './styles';
 
-const Dashboard: React.FC = () => (
-  <>
-    <img src={logoImg} alt="Github Explorer" />
-    <Title>Explore repositórios no Github</Title>
+interface Repository {
+  full_name: string;
+  description: string;
+  owner: {
+    login: string;
+    avatar_url: string;
+  }
+}
 
-    <Form action="">
-      <input type="text" placeholder="Digite aqui..." />
-      <button type="submit">Pesquisar</button>
-    </Form>
+const Dashboard: React.FC = () => {
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [newRepo, setNewRepo] = useState('');
 
-    <Repositories>
-      <a href="/test">
-        <img
-          src="https://avatars0.githubusercontent.com/u/49538119?s=460&u=39a6291923942b4f7cc8fcb4bce259d116807701&v=4"
-          alt="Leonardo"
+  async function handleAddRepository(
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> {
+    event.preventDefault();
+
+    const response = await api.get<Repository>(`repos/${newRepo}`);
+    const { data } = response;
+
+    setRepositories([...repositories, data]);
+    setNewRepo('');
+  }
+
+  return (
+    <>
+      <img src={logoImg} alt="Github Explorer" />
+      <Title>Explore repositórios no Github</Title>
+
+      <Form onSubmit={handleAddRepository}>
+        <input
+          type="text"
+          placeholder="Digite aqui..."
+          value={newRepo}
+          onChange={(e) => setNewRepo(e.target.value)}
         />
+        <button type="submit">Pesquisar</button>
+      </Form>
 
-        <div>
-          <strong>tdd</strong>
-          <p>Test Development Drive</p>
-        </div>
+      <Repositories>
+        {repositories.map((repository) => (
+          <a key={repository.full_name} href="/test">
+            <img
+              src={repository.owner.avatar_url}
+              alt={repository.owner.login}
+            />
 
-        <FiChevronRight size={20} />
+            <div>
+              <strong>{repository.full_name}</strong>
+              <p>{repository.description}</p>
+            </div>
 
-      </a>
-
-    </Repositories>
-  </>
-);
+            <FiChevronRight size={20} />
+          </a>
+        ))}
+      </Repositories>
+    </>
+  );
+};
 
 export default Dashboard;
