@@ -20,6 +20,4 @@ This project is under the [MIT License](https://choosealicense.com/licenses/mit/
 
 ## :pencil: Author
 
-- <a href="https://www.linkedin.com/in/leonardo-morais-456518182/" target="_blank">Leonardo Morais</a>
-
-Made with 💛 by 👨‍💻[Leonardo Morais]
+Made with 💛 by 👨‍💻[Leonardo Morais](https://www.linkedin.com/in/leonardo-morais-456518182/)
